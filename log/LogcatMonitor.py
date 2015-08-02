@@ -8,7 +8,7 @@ class LogcatMonitor(threading.Thread):
     adbCmd = "adb logcat -v raw -s FormBuilder:I"
     requestingQuit = False
     logListener = LogListener()
-    maxInterval = datetime.timedelta(seconds=5)
+    maxInterval = datetime.timedelta(seconds=30)
 
     def __init__(self):
         threading.Thread.__init__(self)

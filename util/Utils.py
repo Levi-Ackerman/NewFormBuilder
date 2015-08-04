@@ -19,10 +19,10 @@ class Utils:
         while process.poll() is None:
             time.sleep(0.1)
             line  = process.stdout.readline()
-            print(line)
-            if "OK (1 test)" in line:
+            # print(line)
+            if line.startswith("Time: "):
                 process.terminate()
                 return True
-            elif "FAILURES!!!" in line:
+            elif line.startswith("FAILURES!!!"):
                 process.terminate()
                 return False

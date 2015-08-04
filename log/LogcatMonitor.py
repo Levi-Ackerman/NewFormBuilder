@@ -3,6 +3,8 @@ import datetime
 from log.LogListener import LogListener
 import subprocess
 import json
+from util.Utils import Utils
+
 
 class LogcatMonitor(threading.Thread):
     adbCmd = "adb logcat -v raw -s FormBuilder:I"
@@ -29,6 +31,7 @@ class LogcatMonitor(threading.Thread):
 
     def run(self):
         self.startTime = datetime.datetime.now()
+        Utils.exeCmdWithTimeout("adb logcat -c",5)
         self.runTimer()
         try:
             print "Begin Listening"
@@ -41,7 +44,7 @@ class LogcatMonitor(threading.Thread):
                     data = json.loads(line)
                     self.logListener.onRead(data)
         except Exception as e:
-            print "Catch an exception:"+e
+            print("Catch an exception:"+e.message)
         finally:
             print "Stop Listening"
             pass

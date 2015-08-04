@@ -12,14 +12,16 @@ class LogcatMonitor(threading.Thread):
 
     def __init__(self):
         threading.Thread.__init__(self)
-        self.timer = threading.Timer(self.maxInterval.seconds,self.timeout)
+
+    def runTimer(self):
+        threading.Timer(self.maxInterval.seconds,self.timeout).start()
 
     def timeout(self):
         if datetime.datetime.now() - self.startTime > self.maxInterval:
             # Time out
-            self.stop()
+            self.stop(True)
         else :
-            self.timer.start()
+            self.runTimer()
             pass
 
     def setLogListener(self,listener):
@@ -27,7 +29,7 @@ class LogcatMonitor(threading.Thread):
 
     def run(self):
         self.startTime = datetime.datetime.now()
-        self.timer.start()
+        self.runTimer()
         try:
             print "Begin Listening"
             self.process = subprocess.Popen(self.adbCmd.split(' '),stdout=subprocess.PIPE,stderr=subprocess.PIPE,shell=False)
@@ -35,16 +37,17 @@ class LogcatMonitor(threading.Thread):
                 line = self.process.stdout.readline()
                 if line.startswith('{'):
                     self.startTime = datetime.datetime.now()
-                    print(line)
+                    # print(line)
                     data = json.loads(line)
+                    self.logListener.onRead(data)
         except Exception as e:
             print "Catch an exception:"+e
         finally:
             print "Stop Listening"
             pass
 
-    def stop(self):
+    def stop(self,isForce):
         self.requestingQuit = True
-        if self.isAlive():
+        if isForce and self.isAlive():
             self.process.terminate()
-            print "Listening time out!"
+            print "Force terminate!"

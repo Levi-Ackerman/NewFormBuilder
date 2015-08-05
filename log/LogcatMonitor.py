@@ -10,13 +10,14 @@ class LogcatMonitor(threading.Thread):
     adbCmd = "adb logcat -v raw -s FormBuilder:I"
     requestingQuit = False
     logListener = LogListener()
-    maxInterval = datetime.timedelta(seconds=30)
+    maxInterval = datetime.timedelta(seconds=60)
 
     def __init__(self):
         threading.Thread.__init__(self)
 
     def runTimer(self):
-        threading.Timer(self.maxInterval.seconds,self.timeout).start()
+        self .timer = threading.Timer(self.maxInterval.seconds,self.timeout)
+        self.timer.start()
 
     def timeout(self):
         if datetime.datetime.now() - self.startTime > self.maxInterval:
@@ -51,7 +52,9 @@ class LogcatMonitor(threading.Thread):
 
     def stop(self,isForce):
         self.requestingQuit = True
+        self.timer.cancel()
         if isForce and self.isAlive():
-            if self.process is not None:
+            if self.process :
                 self.process.terminate()
             print "Force terminate!"
+        self.logListener.onStop()

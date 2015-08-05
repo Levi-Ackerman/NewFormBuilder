@@ -1,0 +1,5 @@
+<configure>
+    <repeat_count>3</repeat_count>
+    <instrument_class>cn.ninegame.gamemanager.activity.MainActivityTest</instrument_class>
+    <instrument_function>testHello</instrument_function>
+</configure>

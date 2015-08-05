@@ -52,5 +52,6 @@ class LogcatMonitor(threading.Thread):
     def stop(self,isForce):
         self.requestingQuit = True
         if isForce and self.isAlive():
-            self.process.terminate()
+            if self.process is not None:
+                self.process.terminate()
             print "Force terminate!"

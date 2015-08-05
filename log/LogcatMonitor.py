@@ -7,7 +7,7 @@ from util.Utils import Utils
 
 
 class LogcatMonitor(threading.Thread):
-    adbCmd = "adb logcat -v raw -s FormBuilder:I"
+    adbCmd = "adb logcat -v raw -s ArmlyTool:I"
     requestingQuit = False
     logListener = LogListener()
     maxInterval = datetime.timedelta(seconds=60)
